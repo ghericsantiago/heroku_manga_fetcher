@@ -8,50 +8,52 @@ const config = require("./config");
 
 const app = express();
 
-app.get("/", async (req, res, next) => {
-  // Fetch All Manga Links
-  const mangaLinks = await fetchAllMangaLinks();
+app.get("/", (req, res, next) => {
+  (async () => {
+    // Fetch All Manga Links
+    const mangaLinks = await fetchAllMangaLinks();
 
-  let i = 1;
-  let trottle = 0;
+    let i = 1;
+    let trottle = 0;
 
-  await (() => {
-    return new Promise(async (resolve, reject) => {
-      for (let link of mangaLinks) {
-        fetchMangaDetails(link).then(data => {
-          if (!data) {
+    await (() => {
+      return new Promise(async (resolve, reject) => {
+        for (let link of mangaLinks) {
+          fetchMangaDetails(link).then(data => {
+            if (!data) {
+              i++;
+              return;
+            }
+
+            // mangaModel.child(`${data.id}`).update(data);
+
+            console.log(data);
+
+            if (i == mangaLinks.length) {
+              resolve();
+            }
             i++;
-            return;
+          });
+
+          if (trottle == 10) {
+            await sleep(1000);
+            trottle = 0;
           }
-
-          // mangaModel.child(`${data.id}`).update(data);
-
-          console.log(data);
-
-          if (i == mangaLinks.length) {
-            resolve();
-          }
-          i++;
-        });
-
-        if (trottle == 10) {
-          await sleep(1000);
-          trottle = 0;
+          trottle++;
         }
-        trottle++;
-      }
-    });
+      });
+    })();
+
+    // Fetch Fetch Manga Details by Manga ID
+
+    // Fetch All Chapter Links
+    // Fetch All Image Links
+
+    // Close firebase
+    firebase.app().delete();
   })();
 
-  // Fetch Fetch Manga Details by Manga ID
-
-  // Fetch All Chapter Links
-  // Fetch All Image Links
-
-  // Close firebase
-  firebase.app().delete();
-
-  res.send(manga);
+  res.send("running something in background");
 });
 
 const port = process.env.PORT || 3000;
@@ -60,6 +62,12 @@ const host = process.env.HOST || "0.0.0.0";
 app.listen(port, host, () => {
   console.log(`Running on ${host}:${port}`);
 });
+
+const sleep = async ms => {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+};
 
 const fetchAllMangaLinks = async () => {
   const html = await fetchHTML("http://www.mangareader.net/alphabetical");
