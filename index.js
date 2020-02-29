@@ -8,7 +8,7 @@ const config = require("./config");
 
 const app = express();
 
-const mangaModel = db.refs("manga2");
+const mangaModel = db.ref("manga2");
 
 app.get("/", (req, res, next) => {
   (async () => {
