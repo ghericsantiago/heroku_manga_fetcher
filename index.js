@@ -8,6 +8,8 @@ const config = require("./config");
 
 const app = express();
 
+const mangaModel = db.refs("manga2");
+
 app.get("/", (req, res, next) => {
   (async () => {
     // Fetch All Manga Links
@@ -25,7 +27,7 @@ app.get("/", (req, res, next) => {
               return;
             }
 
-            // mangaModel.child(`${data.id}`).update(data);
+            mangaModel.child(`${data.id}`).update(data);
 
             console.log(data);
 
