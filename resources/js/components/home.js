@@ -6,6 +6,7 @@ const Home = props => {
   const [titles, setTitles] = useState([]);
   const [filter, setFilter] = useState("");
   const [filteredItems, setFilteredItems] = useState([]);
+  const [chapters, setChapters] = useState([]);
 
   useEffect(() => {
     setFilteredItems(titles);
@@ -18,6 +19,19 @@ const Home = props => {
       );
     });
   }, [filter]);
+
+  const getSubmitSelected = e => {
+    e.preventDefault();
+    const selected = [];
+    for (let checkbox of document.querySelectorAll(
+      "input[type=checkbox]:checked"
+    )) {
+      selected.push(checkbox.value);
+    }
+    axios.post("/service/chapters", { manga: selected }).then(response => {
+      setChapters(response.data);
+    });
+  };
 
   const getTitles = e => {
     e.preventDefault();
@@ -51,36 +65,77 @@ const Home = props => {
           Fetch Titles
         </button>
       </form>
-
-      {titles.length > 0 && (
-        <>
-          <h2>Titles ({filteredItems.length})</h2>
-          <div className="form-group">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Seach"
-              onChange={e => setFilter(e.target.value)}
-            />
-          </div>
+      <div className="row">
+        <div className="col-md-6">
+          {titles.length > 0 && (
+            <>
+              <h2>Titles ({filteredItems.length})</h2>
+              <div className="form-group">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Seach"
+                  onChange={e => setFilter(e.target.value)}
+                />
+              </div>
+              <div className="overflow-auto" style={{ height: "400px" }}>
+                <form>
+                  {filteredItems &&
+                    filteredItems.map(item => (
+                      <div className="form-check">
+                        <input
+                          name="manga[]"
+                          type="checkbox"
+                          class="form-check-input"
+                          value={item.href}
+                        />
+                        <label class="form-check-label">{item.title}</label>
+                      </div>
+                    ))}
+                </form>
+              </div>
+              <button
+                className="btn btn-primary mt-4"
+                onClick={getSubmitSelected}
+              >
+                Fetch Manga Details
+              </button>
+            </>
+          )}
+        </div>
+        <div className="col-md-6">
+          <h2>Manga Details ({chapters.length})</h2>
           <div className="overflow-auto" style={{ height: "400px" }}>
-            <form>
-              {filteredItems &&
-                filteredItems.map(item => (
-                  <div className="form-check">
-                    <input
-                      type="checkbox"
-                      class="form-check-input"
-                      value={item.href}
-                    />
-                    <label class="form-check-label">{item.title}</label>
+            {chapters.length > 0 &&
+              chapters.map(chapter => (
+                <div className="card bg-light mb-3">
+                  <div className="card-body">
+                    <h5 className="card-title">{chapter.name}</h5>
+                    <p class="card-text">
+                      <small class="text-muted">Author: {chapter.author}</small>
+                    </p>
+                    <p class="card-text">
+                      <small class="text-muted">Artist: {chapter.artist}</small>
+                    </p>
+                    <p class="card-text">
+                      <small class="text-muted">
+                        Year: {chapter.release_year}
+                      </small>
+                    </p>
+                    <p class="card-text">
+                      <small class="text-muted">Status: {chapter.status}</small>
+                    </p>
+                    <p class="card-text">
+                      <small class="text-muted">
+                        Reading Direction: {chapter.readingDirection}
+                      </small>
+                    </p>
                   </div>
-                ))}
-            </form>
+                </div>
+              ))}
           </div>
-          <button className="btn btn-primary mt-4">Fetch Chapters</button>
-        </>
-      )}
+        </div>
+      </div>
     </div>
   );
 };
