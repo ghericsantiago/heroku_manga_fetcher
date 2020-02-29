@@ -2,6 +2,7 @@ const express = require("express");
 const superagent = require("superagent");
 const jsdom = require("jsdom");
 const jquery = require("jquery");
+const db = require("./database");
 
 const app = express();
 

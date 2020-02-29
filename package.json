@@ -12,6 +12,7 @@
     "express": "^4.17.1",
     "superagent": "^5.2.2",
     "jquery": "^3.4.1",
-    "jsdom": "^16.2.0"
+    "jsdom": "^16.2.0",
+    "firebase-admin": "^8.9.2"
   }
 }
