@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "nodemon index.js --ignore 'resources/*' --ignore 'public/*'",
     "webpack": "webpack"
   },
   "author": "Gheric",
@@ -16,9 +16,12 @@
     "firebase-admin": "^8.9.2",
     "jquery": "^3.4.1",
     "jsdom": "^16.2.0",
+    "match-sorter": "^4.0.2",
+    "mongoose": "^5.9.2",
     "pug": "^2.0.4",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
+    "react-table": "^7.0.0-rc.16",
     "socket.io": "^2.3.0",
     "superagent": "^5.2.2"
   },

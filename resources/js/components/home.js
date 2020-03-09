@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Table from "./table";
 
 const Home = props => {
   const [fetching, setFetching] = useState(false);
@@ -7,6 +8,19 @@ const Home = props => {
   const [filter, setFilter] = useState("");
   const [filteredItems, setFilteredItems] = useState([]);
   const [chapters, setChapters] = useState([]);
+  const [tableRef, setTableRef] = useState({ selected: [] });
+
+  useEffect(() => {
+    socket.on(`progress_start`, (key, end, start) => {
+      console.log("start");
+    });
+    socket.on(`progress_update`, (key, current) => {
+      console.log("update");
+    });
+    socket.on(`progress_stop`, key => {
+      console.log("end");
+    });
+  }, []);
 
   useEffect(() => {
     setFilteredItems(titles);
@@ -15,20 +29,17 @@ const Home = props => {
   useEffect(() => {
     setFilteredItems(old => {
       return titles.filter(
-        str => str.title.toLowerCase().indexOf(filter.toLowerCase()) !== -1
+        str => str.titwle.toLowerCase().indexOf(filter.toLowerCase()) !== -1
       );
     });
   }, [filter]);
 
   const getSubmitSelected = e => {
     e.preventDefault();
-    const selected = [];
-    for (let checkbox of document.querySelectorAll(
-      "input[type=checkbox]:checked"
-    )) {
-      selected.push(checkbox.value);
-    }
-    axios.post("/service/chapters", { manga: selected }).then(response => {
+    const { selected } = tableRef;
+    const selectedHrefs = selected.map(el => el.href);
+
+    axios.post("/service/chapters", { manga: selectedHrefs }).then(response => {
       setChapters(response.data);
     });
   };
@@ -69,36 +80,11 @@ const Home = props => {
         <div className="col-md-6">
           {titles.length > 0 && (
             <>
-              <h2>Titles ({filteredItems.length})</h2>
-              <div className="form-group">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Seach"
-                  onChange={e => setFilter(e.target.value)}
-                />
-              </div>
               <div className="overflow-auto" style={{ height: "400px" }}>
-                <form>
-                  {filteredItems &&
-                    filteredItems.map(item => (
-                      <div className="form-check">
-                        <input
-                          name="manga[]"
-                          type="checkbox"
-                          class="form-check-input"
-                          value={item.href}
-                        />
-                        <label class="form-check-label">{item.title}</label>
-                      </div>
-                    ))}
-                </form>
+                <Table data={titles} init={setTableRef} />
               </div>
-              <button
-                className="btn btn-primary mt-4"
-                onClick={getSubmitSelected}
-              >
-                Fetch Manga Details
+              <button className="btn btn-primary" onClick={getSubmitSelected}>
+                Fetch Details
               </button>
             </>
           )}

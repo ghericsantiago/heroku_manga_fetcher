@@ -1,8 +1,11 @@
 html
     head
         link(rel='stylesheet', href='/css/bootstrap.min.css')
+        link(rel='stylesheet', href='/css/style.css')
         script(src="/js/app.js", defer)
-        
+        script(src="/socket.io/socket.io.js")
+        script.
+            var socket = io();
     body
       #app
 

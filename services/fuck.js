@@ -2,7 +2,13 @@ const superagent = require("superagent");
 const jsdom = require("jsdom");
 const jquery = require("jquery");
 
-exports.fetchHTML = async (url, retry = 5, tries = 1) => {
+const sleep = async ms => {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+};
+
+const fetchHTML = async (url, retry = 5, tries = 1) => {
   try {
     if (tries == retry) {
       return false;
@@ -17,8 +23,14 @@ exports.fetchHTML = async (url, retry = 5, tries = 1) => {
   }
 };
 
-exports.HTMLPlainToDOM = async html => {
+const HTMLPlainToDOM = async html => {
   const { JSDOM } = jsdom;
   const document = new JSDOM(html);
   return jquery(document.window);
+};
+
+module.exports = {
+  fetchHTML,
+  HTMLPlainToDOM,
+  sleep
 };
