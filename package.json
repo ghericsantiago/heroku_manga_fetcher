@@ -10,7 +10,7 @@
   "author": "Gheric",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "cli-progress": "^3.6.0",
     "express": "^4.17.1",
     "firebase-admin": "^8.9.2",
