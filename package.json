@@ -15,7 +15,7 @@
     "express": "^4.17.1",
     "firebase-admin": "^8.9.2",
     "jquery": "^3.4.1",
-    "jsdom": "^16.2.0",
+    "jsdom": "^16.5.0",
     "match-sorter": "^4.0.2",
     "mongoose": "^5.9.2",
     "pug": "^2.0.4",
