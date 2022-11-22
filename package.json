@@ -33,6 +33,6 @@
     "browser-sync": "^2.26.7",
     "connect-browser-sync": "^2.1.0",
     "webpack": "^4.41.6",
-    "webpack-cli": "^3.3.11"
+    "webpack-cli": "^3.3.12"
   }
 }
