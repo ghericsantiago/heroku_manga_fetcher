@@ -13,7 +13,7 @@
     "axios": "^0.19.2",
     "cli-progress": "^3.6.0",
     "express": "^4.17.1",
-    "firebase-admin": "^8.9.2",
+    "firebase-admin": "^11.4.1",
     "jquery": "^3.4.1",
     "jsdom": "^16.2.0",
     "match-sorter": "^4.0.2",
